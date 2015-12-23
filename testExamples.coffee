@@ -30,6 +30,7 @@ module.exports = class TestExamples
       # specify additional scripts to load relative to your project root. Note that
       # if a package named dist/#{package.json:name}.js exists, that is added automatically
       addScripts: []
+      verbose: false
       
     
   
@@ -45,18 +46,16 @@ module.exports = class TestExamples
     # their rendering
     html = """
       <div id="demo"></div>
-      <script>
-        #{fs.readFileSync('dist/react-datum.js')}
-        window.ReactDatum = ReactDatum
+      #{@_renderScriptTags()}
+      <script id="exampleScript">
+        #{@_getSourceCode(exampleScriptFile)}
+        ReactDOM.render(React.createElement(window.Demo), document.getElementById('demo'))
       </script>
-      <script id="exampleScript">#{fs.readFileSync(exampleScriptFile)}</script>
     """
-    # console.log "WTF", html
-    
     $('body').html(html)
     
-    #console.log "woohoo"
-
+    #console.log "woohoo", @_getSourceCode(exampleScriptFile) #$('#exampleScript').html()
+    
     done()
 
 
@@ -80,13 +79,18 @@ module.exports = class TestExamples
     scripts = @options.addScripts.concat([])
     npmPackage = JSON.parse(fs.readFileSync('package.json'))
     userDist = "dist/#{npmPackage.name}.js"
-    scripts.push(userDist) if fs.existsSync(userDist)
+    scripts.push(userDist) if fs.existsSync(userDist) && userDist not in scripts
     
     scriptTags = for script in scripts
-      "<script>#{fs.readFileSync(script)}</script>"
+      console.log "adding script tag for #{script}" if @options.verbose
+      "<script>#{@_getSourceCode(script)}</script>"
     
     return scriptTags.join('\n')
       
-    
+      
+  _getSourceCode: (script) ->
+    src = fs.readFileSync(script).toString()
+    # use strict seems to mess with JSDOM (or our code isn't strict enough (fu u pedantic f's))
+    return src.replace('"use strict";', '')
   
   
