@@ -84,6 +84,9 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   # add when and other change detection tests
   chaiChanges = require("chai-changes");
   chai.use(chaiChanges)
+  
+  # adds some handy assertions like toHaveKnownValues 
+  require '../chaiHelpers'
 
 
   # if  this is found at the top of the file it is ignored when running from the command line
