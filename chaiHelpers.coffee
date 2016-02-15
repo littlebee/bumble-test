@@ -10,7 +10,7 @@ Chai.use (chai) ->
     
     actual = [actual] unless _.isArray(actual)
     expected = [expected] unless _.isArray(expected)
-    while oneExpected in expected
+    for oneExpected in expected
       #console.log actual
       found = false
       for oneActual in actual

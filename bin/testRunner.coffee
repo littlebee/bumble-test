@@ -13,11 +13,11 @@ The only required parameter is a glob for the path to run tests from.  Can also 
 a single test to run and can be run in the node-inspector.
 """
 
-
-Mocha = require('mocha')
 path = require('path')
 fs = require('fs')
 glob = require('glob')
+
+Mocha = require('mocha')
 _ = require('underscore')
 
 require('coffee-react/register') #  jit compile .coffee and .cjsx on require
