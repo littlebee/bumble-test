@@ -32,12 +32,6 @@ testOptions = require('commander')
 .usage('[options] [optional .coffee file paths of tests to run...]')
 .parse(process.argv)
 
-mocha = new Mocha(
-  reporter: 'spec'
-  ui: 'bdd'
-  timeout: 999999
-  useColors: true
-)
 
 # we load these globally so we don't have to repeat ourselves in every test
 global.chai =  require("chai")
@@ -87,10 +81,25 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   
   # adds some handy assertions like toHaveKnownValues 
   require '../chaiHelpers'
+  
+  coffeeCov = require 'coffee-coverage'
+  
+  coffeeCov.register({
+      instrumentor: 'istanbul',
+      basePath: './src'
+  });
 
 
   # if  this is found at the top of the file it is ignored when running from the command line
   BROWSER_ONLY_ANNOTATION = '#@browserOnly'
+
+  mochaOptions = 
+    reporter: 'spec'
+    ui: 'bdd'
+    timeout: 999999
+    useColors: true
+        
+  mocha = new Mocha(mochaOptions)
 
   processFile = (file) ->
     # ignore our test/lib dir
@@ -108,7 +117,7 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
     return
 
 
-  runMocha = ->
+  runMocha = ()->
     require("babel-core/register")({
       "presets": [ "react", "es2015" ]
       "ignore": (fileName) -> 
@@ -142,5 +151,6 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   
   files = glob.sync(testDir, nodir: true)
   files.forEach processFile
-
   runMocha()
+  
+
