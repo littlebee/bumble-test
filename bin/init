@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir -p scripts/
+cp node_modules/bumble-test/scripts/* scripts/
+

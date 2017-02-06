@@ -1,0 +1,4 @@
+#!/bin/bash
+
+coffee node_modules/bumble-test/bin/testRunner.coffee "$@"
+
