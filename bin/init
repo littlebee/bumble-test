@@ -3,3 +3,7 @@
 mkdir -p scripts/
 cp node_modules/bumble-test/scripts/* scripts/
 
+chmod +x scripts/runTest
+chmod +x scripts/debugTest
+
+
