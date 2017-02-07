@@ -87,6 +87,7 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   coffeeCov.register({
       instrumentor: 'istanbul',
       basePath: './src'
+      initAll: true
   });
 
 
