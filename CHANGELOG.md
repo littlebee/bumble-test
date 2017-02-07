@@ -1,3 +1,9 @@
+## [0.2.2](https://github.com/littlebee/bumble-test.git/compare/0.2.1...0.2.2) (2017-02-7)
+
+
+### Other Commits
+* [3bc1cc2](https://github.com/littlebee/bumble-test.git/commit/3bc1cc2d7bbf12226e3a175e2edd252d2dd92bd0) testRunner should exit with failure count
+
 ## [0.2.1](https://github.com/littlebee/bumble-test.git/compare/0.2.0...0.2.1) (2017-02-6)
 
 
