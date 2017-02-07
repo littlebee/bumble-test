@@ -127,17 +127,20 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
         #console.log fileName, truth
         return truth
     })
-
+    passingCount = 0
+    failingCount = 0
+    
     runner = mocha.run ->
-      console.log 'finished'
+      console.log "finished with #{failingCount} failures"
+      process.exit(failingCount)
       return
     
     runner.on 'pass', (test) ->
-      #console.log('... %s passed', test.title);
+      passingCount++
       return
     
     runner.on 'fail', (test) ->
-      #console.log('... %s failed', test.title);
+      failingCount++
       return
     
     return
