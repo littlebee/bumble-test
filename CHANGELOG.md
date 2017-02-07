@@ -1,3 +1,9 @@
+## [0.3.0](https://github.com/littlebee/bumble-test.git/compare/0.2.2...0.3.0) (2017-02-7)
+code coverage works!  use `node_modules/.bin/istanbul report text-summary lcov` to generate after running tests and view coverage/lcov-report/index.html
+
+### Other Commits
+* [7f3512d](https://github.com/littlebee/bumble-test.git/commit/7f3512dc27b4bdb4f5c933efbaa4e3e795e323b7) add initAll:true to instanbul register - code overage works!  use 'node_modules/.bin/istanbul report text-summary lcov'
+
 ## [0.2.2](https://github.com/littlebee/bumble-test.git/compare/0.2.1...0.2.2) (2017-02-7)
 
 
