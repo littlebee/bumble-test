@@ -1,3 +1,9 @@
+## [0.4.0](https://github.com/littlebee/bumble-test.git/compare/0.3.1...0.4.0) (2017-02-18)
+
+
+### New Features
+* [5db9ed3](https://github.com/littlebee/bumble-test.git/commit/5db9ed3c0681567969b8d9c70dcd13df021e3b57)  add support for code coverage on .cjsx files. Temporarily using custom fork of coffee-coverage awaiting pull request
+
 ## [0.3.1](https://github.com/littlebee/bumble-test.git/compare/0.3.0...0.3.1) (2017-02-7)
 
 
