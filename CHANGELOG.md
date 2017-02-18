@@ -1,3 +1,9 @@
+## [0.4.1](https://github.com/littlebee/bumble-test.git/compare/0.4.0...0.4.1) (2017-02-18)
+
+
+### Other Commits
+* [30f7bf6](https://github.com/littlebee/bumble-test.git/commit/30f7bf6a6242801f6fc01ed163d9481e8fea2ab9) use withCompiled branch of coffee-coverage fork
+
 ## [0.4.0](https://github.com/littlebee/bumble-test.git/compare/0.3.1...0.4.0) (2017-02-18)
 
 
