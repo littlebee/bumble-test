@@ -20,8 +20,13 @@ glob = require('glob')
 Mocha = require('mocha')
 _ = require('underscore')
 
-require('coffee-react/register') #  jit compile .coffee and .cjsx on require
-#require('node-cjsx').transform()
+require('module').prototype.options = 
+  transpile: 
+    presets: ['env', 'react']
+    # plugins: ["transform-object-rest-spread"]
+
+require('coffeescript/register') #  jit compile .coffee and .cjsx on require
+require.extensions['.cjsx'] = require.extensions['.coffee']
 
 
 testOptions = require('commander')
@@ -82,15 +87,15 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   # adds some handy assertions like toHaveKnownValues 
   require '../chaiHelpers'
   
-  coffeeCov = require 'coffee-coverage'
-  
-  coffeeCov.register({
-      instrumentor: 'istanbul',
-      basePath: './src'
-      coverageVar: coffeeCov.findIstanbulVariable()
-      writeOnExit: './coverage/coverage-coffee.json'
-      initAll: true
-  });
+  # coffeeCov = require 'coffee-coverage'
+  # 
+  # coffeeCov.register({
+  #     instrumentor: 'istanbul',
+  #     basePath: './src'
+  #     coverageVar: coffeeCov.findIstanbulVariable()
+  #     writeOnExit: './coverage/coverage-coffee.json'
+  #     initAll: true
+  # });
 
 
   # if  this is found at the top of the file it is ignored when running from the command line
