@@ -1,3 +1,9 @@
+## [0.4.2](https://github.com/littlebee/bumble-test.git/compare/0.4.1...0.4.2) (2018-04-4)
+
+
+### Other Commits
+* [b631f53](https://github.com/littlebee/bumble-test.git/commit/b631f53ef6089a7faec086d599911a4abf38d28c) update coffee-react to 5.0.0
+
 ## [0.4.1](https://github.com/littlebee/bumble-test.git/compare/0.4.0...0.4.1) (2017-02-18)
 
 
