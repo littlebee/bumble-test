@@ -1,3 +1,9 @@
+## [0.4.3](https://github.com/littlebee/bumble-test.git/compare/0.4.2...0.4.3) (2018-04-10)
+
+
+### Other Commits
+* [281e3b6](https://github.com/littlebee/bumble-test.git/commit/281e3b62da931310df070ae84ba8e631aaaa8ef5) add shim for global.requestAnimationFrame as needed by React 16
+
 ## [0.4.2](https://github.com/littlebee/bumble-test.git/compare/0.4.1...0.4.2) (2018-04-4)
 
 
