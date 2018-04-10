@@ -60,6 +60,10 @@ jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, windo
   # TODO : this is probably unneccessary for this package, i don't think we use localStorage anywhere
   # simulate browser localStorage
   global.localStorage = window.localStorage = {}
+  
+  # this shim is needed by React 16 in jsDom.  see, https://github.com/facebook/jest/issues/4545
+  global.requestAnimationFrame = (callback) ->
+    setTimeout(callback, 0)
 
   # all tests can just say  if(testOptions.verbose)
   global.testOptions = _.defaults testOptions || {},
