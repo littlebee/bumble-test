@@ -1,3 +1,8 @@
+## [0.5.0](https://github.com/littlebee/bumble-test.git/compare/v0.4.3...v0.5.0) - (2018-06-11)
+
+### Other Commits
+* [a103f0c](https://github.com/littlebee/bumble-test.git/commit/a103f0c480fcad81c71da499f2b67bf615eb7ddf) update mocha to 4.1.0 to fix growl < v1.10 security nanny alert
+
 ## [0.4.3](https://github.com/littlebee/bumble-test.git/compare/0.4.2...0.4.3) (2018-04-10)
 
 
