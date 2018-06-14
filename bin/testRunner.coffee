@@ -32,6 +32,15 @@ testOptions = require('commander')
 .usage('[options] [optional .coffee file paths of tests to run...]')
 .parse(process.argv)
 
+require('jsdom-global')()
+testBodyEl = document.createElement('div')
+testBodyEl.setAttribute('id', 'testBody')
+document.body.appendChild(testBodyEl)
+
+global.Element = window.Element 
+require 'closest'
+
+
 
 # we load these globally so we don't have to repeat ourselves in every test
 global.chai =  require("chai")
@@ -41,126 +50,110 @@ global.expect = chai.expect
 
 chai.config.includeStack = true   # need stack on exceptions
 
-jsdom = require("jsdom");
+# TODO : this is probably unneccessary for this package, i don't think we use localStorage anywhere
+# simulate browser localStorage
+global.localStorage = {}
 
-jsdom.defaultDocumentFeatures = { 
-    FetchExternalResources   : ['script'],
-    ProcessExternalResources : ['script'],
-    MutationEvents           : '2.0',
-};
+# this shim is needed by React 16 in jsDom.  see, https://github.com/facebook/jest/issues/4545
+global.requestAnimationFrame = (callback) ->
+  setTimeout(callback, 0)
 
-jsdom.env '<html><body><div id="testBody"></div></body></html>', [], (err, window) ->
-  global.window = window
-  global.document = window.document
-  global.navigator = window.navigator
+# all tests can just say  if(testOptions.verbose)
+global.testOptions = _.defaults testOptions || {},
+  verbose: false
 
-  # bootstrap and others expect jquery to be in window
-  #window.jQuery = window.$ = global.jQuery
+# adds spies, mocks and other  see http://sinonjs.org/docs/
+# and http://chaijs.com/plugins/sinon-chai  for chai expectation
+global.sinon = require('sinon')
+global.chaiSinon = require('sinon-chai')
+global.chai.use(chaiSinon)
 
-  # TODO : this is probably unneccessary for this package, i don't think we use localStorage anywhere
-  # simulate browser localStorage
-  global.localStorage = window.localStorage = {}
-  
-  # this shim is needed by React 16 in jsDom.  see, https://github.com/facebook/jest/issues/4545
-  global.requestAnimationFrame = (callback) ->
-    setTimeout(callback, 0)
+# adds should.trigger semantics  http://chaijs.com/plugins/chai-backbone
+chaiBackbone = require("chai-backbone");
+chai.use(chaiBackbone);
 
-  # all tests can just say  if(testOptions.verbose)
-  global.testOptions = _.defaults testOptions || {},
-    verbose: false
+# add when and other change detection tests
+chaiChanges = require("chai-changes");
+chai.use(chaiChanges)
 
-  # adds spies, mocks and other  see http://sinonjs.org/docs/
-  # and http://chaijs.com/plugins/sinon-chai  for chai expectation
-  global.sinon = require('sinon')
-  global.chaiSinon = require('sinon-chai')
-  global.chai.use(chaiSinon)
+# adds some handy assertions like toHaveKnownValues 
+require '../chaiHelpers'
 
-  # adds should.trigger semantics  http://chaijs.com/plugins/chai-backbone
-  chaiBackbone = require("chai-backbone");
-  chai.use(chaiBackbone);
+coffeeCov = require 'coffee-coverage'
 
-  # add when and other change detection tests
-  chaiChanges = require("chai-changes");
-  chai.use(chaiChanges)
-  
-  # adds some handy assertions like toHaveKnownValues 
-  require '../chaiHelpers'
-  
-  coffeeCov = require 'coffee-coverage'
-  
-  coffeeCov.register({
-      instrumentor: 'istanbul',
-      basePath: './src'
-      coverageVar: coffeeCov.findIstanbulVariable()
-      writeOnExit: './coverage/coverage-coffee.json'
-      initAll: true
-  });
+coffeeCov.register({
+    instrumentor: 'istanbul',
+    basePath: './src'
+    coverageVar: coffeeCov.findIstanbulVariable()
+    writeOnExit: './coverage/coverage-coffee.json'
+    initAll: true
+});
 
 
-  # if  this is found at the top of the file it is ignored when running from the command line
-  BROWSER_ONLY_ANNOTATION = '#@browserOnly'
+# if  this is found at the top of the file it is ignored when running from the command line
+BROWSER_ONLY_ANNOTATION = '#@browserOnly'
 
-  mochaOptions = 
-    reporter: 'spec'
-    ui: 'bdd'
-    timeout: 999999
-    useColors: true
-        
-  mocha = new Mocha(mochaOptions)
+mochaOptions = 
+  reporter: 'spec'
+  ui: 'bdd'
+  timeout: 999999
+  useColors: true
+      
+mocha = new Mocha(mochaOptions)
 
-  processFile = (file) ->
-    # ignore our test/lib dir
-    return if path.extname(file) not in ['.coffee', '.cjsx', '.js'] || file.match(/\/lib\//g)
+processFile = (file) ->
+  # ignore our test/lib dir
+  return if path.extname(file) not in ['.coffee', '.cjsx', '.js'] || file.match(/\/lib\//g)
 
-    fileContents = fs.readFileSync(file)
-    if fileContents.slice(0, BROWSER_ONLY_ANNOTATION.length) == BROWSER_ONLY_ANNOTATION
-      console.log 'Skipping browser only tests in ' + file
-      return
-
-    if testOptions.verbose
-      console.log 'adding test file: %s', file
-
-    mocha.addFile file
+  fileContents = fs.readFileSync(file)
+  if fileContents.slice(0, BROWSER_ONLY_ANNOTATION.length) == BROWSER_ONLY_ANNOTATION
+    console.log 'Skipping browser only tests in ' + file
     return
 
+  if testOptions.verbose
+    console.log 'adding test file: %s', file
 
-  runMocha = ()->
-    require("babel-core/register")({
-      "presets": [ "react", "es2015" ]
-      "ignore": (fileName) -> 
-        truth = path.extname(fileName).toLowerCase() in ['.cjsx', '.coffee'] ||
-          (fileName.match(/\/node_modules\/.*/) && 
-           !fileName.match(/\/node_modules\/react-select.*/) )
-        #console.log fileName, truth
-        return truth
-    })
-    passingCount = 0
-    failingCount = 0
-    
-    runner = mocha.run ->
-      console.log "finished with #{failingCount} failures"
-      process.exit(failingCount)
-      return
-    
-    runner.on 'pass', (test) ->
-      passingCount++
-      return
-    
-    runner.on 'fail', (test) ->
-      failingCount++
-      return
-    
+  mocha.addFile file
+  return
+
+
+runMocha = ()->
+  require("babel-core/register")({
+    "presets": [ "react", "es2015" ]
+    "ignore": (fileName) -> 
+      truth = path.extname(fileName).toLowerCase() in ['.cjsx', '.coffee'] ||
+        (fileName.match(/\/node_modules\/.*/) && 
+         !fileName.match(/\/node_modules\/react-select.*/) )
+      #console.log fileName, truth
+      return truth
+  })
+  passingCount = 0
+  failingCount = 0
+
+  runner = mocha.run ->
+    console.log "finished with #{failingCount} failures"
+    process.exit(failingCount)
     return
+  
+  runner.on 'pass', (test) ->
+    passingCount++
+    return
+  
+  runner.on 'fail', (test) ->
+    failingCount++
+    return
+  
+  return
 
-  console.log 'Running tests...'
-  
-  testDir = if testOptions.args.length > 0
-    testOptions.args[0]
-  else
-    './test/**/*'
-  
-  files = glob.sync(testDir, nodir: true)
-  files.forEach processFile
-  runMocha()
-  
+console.log 'Running tests...'
+
+testDir = if testOptions.args.length > 0
+  testOptions.args[0]
+else
+  './test/**/*'
+
+files = glob.sync(testDir, nodir: true)
+files.forEach processFile
+runMocha()
+
 
