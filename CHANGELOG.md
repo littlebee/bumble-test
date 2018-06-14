@@ -1,3 +1,8 @@
+## [0.6.0](https://github.com/littlebee/bumble-test.git/compare/v0.5.0...v0.6.0) - (2018-06-14)
+
+### Other Commits
+* [27b7a71](https://github.com/littlebee/bumble-test.git/commit/27b7a716103531fae806f488d7f21a195203f61a) update jsdom to jsdom-global for modern event support
+
 ## [0.5.0](https://github.com/littlebee/bumble-test.git/compare/v0.4.3...v0.5.0) - (2018-06-11)
 
 ### Other Commits
