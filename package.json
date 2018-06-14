@@ -1,6 +1,6 @@
 {
   "name": "bumble-test",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A test runner setup for running Mocha + Chai + Sinon + JsDom that will proabably not work with your code.",
   "main": "index.js",
   "scripts": {
